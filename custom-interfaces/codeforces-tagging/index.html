@@ -1,0 +1,192 @@
+<script src="https://api.labelbox.com/static/labeling-api.js"></script>
+
+<style>
+
+    .header {
+        display: flex;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .headerButton {
+        width: 200px;
+        height: 60px;
+        font-size: 18px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+    }
+
+    .fetchedImage {
+        width: 300px;
+        margin: auto;
+        display: none;
+    }
+
+    .codeContainer {
+        /*display: flex;*/
+        float: left;
+        width: 45%;
+    }
+
+    .tagContainer {
+        display: flex;
+        width: 50%;
+        margin: auto;
+    }
+
+    .tagGroup {
+        flex: 1;
+        margin: auto;
+        justify-content: center;
+    }
+
+    .labelButton {
+        margin: 10px auto;
+        display: block;
+        width: 100px;
+    }
+
+    .unclicked {
+        color: red;
+    }
+
+    .clicked {
+        color: green;
+    }
+</style>
+
+<div>
+    <div class="header">
+        <button class="headerButton" style="background-color: lightgreen" onclick="label(collectLabels())">Label!</button>
+        <button class="headerButton" style="background-color: lightpink" onclick="skipLabeling()">Skip</button>
+    </div>
+    <div class="codeContainer" id="codeContainer">
+        <!--        <img src="data:," id="queryImage" class="fetchedImage">-->
+    </div>
+
+    <div class="tagContainer" id="tagContainerUp"></div>
+    <div class="tagContainer" id="tagContainerDown"></div>
+</div>
+
+<script>
+
+    class TagButton {
+        constructor(divContainer, tag, button) {
+            this.selected = false;
+
+            this.switchState = function() {
+                if (this.selected) {
+                    button.classList.remove("clicked");
+                    button.classList.add("unclicked");
+                } else {
+                    button.classList.remove("unclicked");
+                    button.classList.add("clicked");
+                }
+                this.selected = !this.selected;
+            };
+
+            button.classList.add("labelButton");
+            button.classList.add("unclicked");
+            button.appendChild(document.createTextNode(tag));
+            divContainer.appendChild(button);
+        }
+
+        isSelected() {
+            return this.selected;
+        }
+    }
+
+
+    const allTags = {
+        "Data structures": ["data structures", "dsu", "segment tree", "treap", "trie", "sparse table", "linked list", "skip-list"],
+        "General Concepts": ["binary search", "ternary search", "two pointers", "sortings", "divide and conquer"],
+        "Graphs": ["graphs", "trees", "dfs and similar", "shortest paths", "graph matchings", "flows"],
+        "Math": ["number theory", "combinatorics", "matrices", "probabilities", "fft", "geometry"],
+        "Strings": ["strings", "hashing", "string suffix structures"],
+        "Dynamic Programming": ["dp", "bitmasks", "meet-in-the-middle"],
+        "Miscellaneous": ["interactive", "2-sat", "games", "constructive algorithms", "brute force", "greedy"]
+    };
+
+    let tag2TagButtons = {};
+
+    function label(label) {
+        console.log("Saving");
+        Labelbox.setLabelForAsset(label).then(() => {
+            console.log("Loading next");
+            Labelbox.fetchNextAssetToLabel();
+        });
+    }
+
+    function collectLabels() {
+        let result = {};
+        for (let key of Object.keys(allTags)) {
+            allTags[key].forEach(function (tag, _) {
+                result[tag] = tag2TagButtons[tag].isSelected();
+            });
+        }
+        return JSON.stringify(result);
+    }
+
+    function cleanLabels() {
+        for (let key of Object.keys(allTags)) {
+            allTags[key].forEach(function (tag, _) {
+                if(tag2TagButtons[tag].isSelected()) {
+                    tag2TagButtons[tag].switchState();
+                }
+            });
+        }
+    }
+
+    function skipLabeling() {
+        Labelbox.skip().then(() => {
+            console.log('Skipped!');
+            Labelbox.fetchNextAssetToLabel();
+        })
+    }
+
+    Labelbox.currentAsset().subscribe(asset => {
+        if (asset) {
+            drawItem(asset.data);
+        }
+    });
+
+    function drawItem(dataToLabel) {
+        console.log("loading");
+        const sourceCodeParagraph = document.getElementById("codeContainer");
+        fetch(dataToLabel)
+            .then(response => response.text())
+            .then((data) => {
+                sourceCodeParagraph.innerHTML = data;
+                cleanLabels()
+            });
+    }
+
+    function addTagsToDiv(div, tags) {
+        tags.forEach(function (tag, _) {
+            let button = document.createElement("button");
+            tag2TagButtons[tag] = new TagButton(div, tag, button);
+            button.onclick = function () {
+                tag2TagButtons[tag].switchState();
+            };
+        });
+    }
+
+    function createTagGroup(tags, id) {
+        const tagContainer = document.getElementById(id);
+        let tagGroup = document.createElement("div");
+        tagGroup.classList.add("tagGroup");
+        addTagsToDiv(tagGroup, tags);
+        tagContainer.appendChild(tagGroup);
+    }
+
+    createTagGroup(allTags["General Concepts"], "tagContainerUp");
+    createTagGroup(allTags["Strings"], "tagContainerUp");
+    createTagGroup(allTags["Dynamic Programming"], "tagContainerUp");
+    createTagGroup(allTags["Miscellaneous"], "tagContainerUp");
+
+    createTagGroup(allTags["Data structures"], "tagContainerDown");
+    createTagGroup(allTags["Graphs"], "tagContainerDown");
+    createTagGroup(allTags["Math"], "tagContainerDown");
+
+</script>
