@@ -1,4 +1,7 @@
 <script src="https://api.labelbox.com/static/labeling-api.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 <style>
 
@@ -10,9 +13,9 @@
 
     .headerButton {
         width: 200px;
-        height: 60px;
+        /*height: 60px;*/
         font-size: 18px;
-        margin: auto;
+        margin: 10px auto;
         display: flex;
         justify-content: center;
     }
@@ -44,22 +47,15 @@
     .labelButton {
         margin: 10px auto;
         display: block;
-        width: 100px;
-    }
-
-    .unclicked {
-        color: red;
-    }
-
-    .clicked {
-        color: green;
+        width: 130px;
+        white-space: normal;
     }
 </style>
 
 <div>
     <div class="header">
-        <button class="headerButton" style="background-color: lightgreen" onclick="label(collectLabels())">Label!</button>
-        <button class="headerButton" style="background-color: lightpink" onclick="skipLabeling()">Skip</button>
+        <button type="button" class="btn btn-success headerButton" onclick="label(collectLabels())">Label!</button>
+        <button type="button" class="btn btn-warning headerButton" onclick="label(skipLabeling())">Skip</button>
     </div>
     <div class="codeContainer" id="codeContainer">
         <!--        <img src="data:," id="queryImage" class="fetchedImage">-->
@@ -77,17 +73,19 @@
 
             this.switchState = function() {
                 if (this.selected) {
-                    button.classList.remove("clicked");
-                    button.classList.add("unclicked");
+                    button.classList.remove("btn-success");
+                    button.classList.add("btn-danger");
                 } else {
-                    button.classList.remove("unclicked");
-                    button.classList.add("clicked");
+                    button.classList.remove("btn-danger");
+                    button.classList.add("btn-success");
                 }
                 this.selected = !this.selected;
             };
 
+            button.type = "button";
             button.classList.add("labelButton");
-            button.classList.add("unclicked");
+            button.classList.add("btn");
+            button.classList.add("btn-danger");
             button.appendChild(document.createTextNode(tag));
             divContainer.appendChild(button);
         }
@@ -158,6 +156,9 @@
             .then(response => response.text())
             .then((data) => {
                 sourceCodeParagraph.innerHTML = data;
+                sourceCodeParagraph.children[0].style.border = "";
+                sourceCodeParagraph.children[0].style.borderWidth = "";
+                sourceCodeParagraph.children[0].style.marginLeft = "10px";
                 cleanLabels()
             });
     }
