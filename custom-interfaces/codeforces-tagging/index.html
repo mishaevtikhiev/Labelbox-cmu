@@ -54,11 +54,16 @@
 
 <div>
     <div class="header">
+        <a class="btn btn-primary headerButton" id="problemButton">Problem</a>
+        <a class="btn btn-primary headerButton" id="submissionButton">Submission</a>
         <button type="button" class="btn btn-warning headerButton" onclick="skipLabeling()">Skip</button>
         <button type="button" class="btn btn-success headerButton" onclick="label(collectLabels())">Label!</button>
     </div>
-    <div class="codeContainer" id="codeContainer">
-        <!--        <img src="data:," id="queryImage" class="fetchedImage">-->
+    <div class="codeContainer">
+<!--        <div class="header">-->
+<!--           -->
+<!--        </div>-->
+        <div id="codeContainer"></div>
     </div>
 
     <div class="tagContainer" id="tagContainerUp"></div>
@@ -153,7 +158,20 @@
         console.log("loading");
         const sourceCodeParagraph = document.getElementById("codeContainer");
         fetch(dataToLabel)
-            .then(response => response.text())
+            .then(response => {
+                const parts = response.url.split("-");
+                const filename = parts[parts.length - 1];
+                const nameparts = filename.split("_");
+                const contestId = nameparts[0];
+                const problemId = nameparts[1];
+                const submissionId = nameparts[3].split(".")[0];
+                // console.log(contestId, problemId, submissionId);
+                document.getElementById("problemButton")
+                    .setAttribute("href", "https://codeforces.com/contest/" + contestId + "/problem/" + problemId);
+                document.getElementById("submissionButton")
+                    .setAttribute("href", "https://codeforces.com/contest/" + contestId + "/submission/" + submissionId);
+                return response.text();
+            })
             .then((data) => {
                 sourceCodeParagraph.innerHTML = data;
                 sourceCodeParagraph.children[0].style.border = "";
