@@ -5,14 +5,14 @@
 
 <style>
 
-    .header {
+    .choice {
         display: flex;
         width: 100%;
         margin-bottom: 15px;
     }
 
-    .headerButton {
-        width: 200px;
+    .choiceButton {
+        /*width: 200px; */
         /*height: 60px;*/
         font-size: 18px;
         margin: 10px auto;
@@ -23,20 +23,23 @@
     .codeContainer {
         /*display: flex;*/
         float: left;
-        width: 45%;
+        width: 80%;
     }
 
 </style>
 
 <div>
-    <div class="header">
-        <button type="button" class="btn btn-danger headerButton" onclick="label('False')">Not clone</button>
-        <button type="button" class="btn btn-primary headerButton" onclick="skipLabeling()">Skip</button>
-        <button type="button" class="btn btn-success headerButton" onclick="label('True')">Clone</button>
-    </div>
     <div class="codeContainer">
         <div id="codeContainer"></div>
     </div>
+    <div class="choice">
+        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">0 - Irrelevant</button>
+        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">1 - Weak match</button>
+        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">2 - Strong match</button>
+        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">3 - Exact match</button>
+        <button type="button" class="btn btn-primary choiceButton" onclick="skipLabeling()">Skip</button>
+    </div>
+
 </div>
 
 <script>
