@@ -1,0 +1,91 @@
+<script src="https://api.labelbox.com/static/labeling-api.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<style>
+
+    .header {
+        display: flex;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .headerButton {
+        width: 200px;
+        /*height: 60px;*/
+        font-size: 18px;
+        margin: 10px auto;
+        display: flex;
+        justify-content: center;
+    }
+
+    .codeContainer {
+        /*display: flex;*/
+        float: left;
+        width: 45%;
+    }
+
+</style>
+
+<div>
+    <div class="header">
+        <button type="button" class="btn btn-danger headerButton" onclick="label('False')">Not clone</button>
+        <button type="button" class="btn btn-primary headerButton" onclick="skipLabeling()">Skip</button>
+        <button type="button" class="btn btn-success headerButton" onclick="label('True')">Clone</button>
+    </div>
+    <div class="codeContainer">
+        <div id="codeContainerLeft"></div>
+    </div>
+    <div class="codeContainer">
+        <div id="codeContainerRight"></div>
+    </div>
+</div>
+
+<script>
+
+    function label(label) {
+        console.log("Saving");
+        Labelbox.setLabelForAsset(label).then(() => {
+            console.log("Loading next");
+            Labelbox.fetchNextAssetToLabel();
+        });
+    }
+
+    function skipLabeling() {
+        Labelbox.skip().then(() => {
+            console.log('Skipped!');
+            Labelbox.fetchNextAssetToLabel();
+        })
+    }
+
+    Labelbox.currentAsset().subscribe(asset => {
+        if (asset) {
+            drawItem(asset.data);
+        }
+    });
+
+    function drawItem(dataToLabel) {
+        console.log("loading");
+        const sourceCodeParagraphLeft = document.getElementById("codeContainerLeft");
+        const sourceCodeParagraphRight = document.getElementById("codeContainerRight");
+        fetch(dataToLabel)
+            .then(response => {
+                return response.text();
+            })
+            .then((data) => {
+                var index = data.toString().indexOf("<!DOCTYPE");
+                var dataLeft = data.substring(0, index);
+                var dataRight = data.substring(index, data.length);
+                sourceCodeParagraphLeft.innerHTML = dataLeft;
+                sourceCodeParagraphLeft.children[0].style.border = "";
+                sourceCodeParagraphLeft.children[0].style.borderWidth = "";
+                sourceCodeParagraphLeft.children[0].style.marginLeft = "10px";
+                sourceCodeParagraphRight.innerHTML = dataRight;
+                sourceCodeParagraphRight.children[0].style.border = "";
+                sourceCodeParagraphRight.children[0].style.borderWidth = "";
+                sourceCodeParagraphRight.children[0].style.marginLeft = "10px";
+            });
+    }
+
+</script>
