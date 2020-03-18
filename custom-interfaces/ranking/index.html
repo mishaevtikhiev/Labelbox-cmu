@@ -1,3 +1,7 @@
+<!-- <head>
+  <meta charset="utf-8">
+</head>
+ -->
 <script src="https://api.labelbox.com/static/labeling-api.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -9,36 +13,61 @@
         display: flex;
         width: 100%;
         margin-bottom: 15px;
+        margin-left: 10px
     }
 
     .choiceButton {
         /*width: 200px; */
         /*height: 60px;*/
-        font-size: 18px;
-        margin: 10px auto;
+        font-size: 20px;
+        border: none;
+        display: inline-block;
+        /* margin: 10px auto;*/
         display: flex;
         justify-content: center;
     }
 
+    .btn-secondary:hover {
+        background-color: #999999;
+    }
+
     .codeContainer {
         /*display: flex;*/
+        margin-left: 10px;
         float: left;
-        width: 80%;
+        width: 85%;
     }
 
 </style>
 
 <div>
+    <hr>
+    <div style="font-size: 18px; margin: 8px">
+        Please annotate the following query:
+    </div>
+    <!-- <div lang="ru" style="font-size: 18px; margin: 8px">Выберете степень релевантности:</div> -->
+    <div style="background-color:powderblue; font-size: 28px; margin-left: 10px; margin-right: 13%; padding: 10px; border-radius: 10px;">
+        <spin style="margin-left: 3px" id="queryContainer"></spin>
+    </div>
+    <!-- <hr style="opacity: 0.85"> -->
     <div class="codeContainer">
         <div id="codeContainer"></div>
     </div>
-    <div class="choice">
-        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">0 - Irrelevant</button>
-        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">1 - Weak match</button>
-        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">2 - Strong match</button>
-        <button type="button" class="btn btn-danger choiceButton" onclick="label('False')">3 - Exact match</button>
+
+    <div style="clear: left; margin: 10px">
+        <a href="https://google.com" style="clear: left; font-size: 18" id="linkContainer"> Link to GitHub </a>
+    </div>
+
+    <div class="btn-group choice" role="group" aria-label="Basic example" >
+        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Irrelevant')">0 - Irrelevant</button>
+        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Weak match')">1 - Weak match</button>
+        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Strong match')">2 - Strong match</button>
+        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Exact match')">3 - Exact match</button>
         <button type="button" class="btn btn-primary choiceButton" onclick="skipLabeling()">Skip</button>
     </div>
+
+    <hr>
+</div>
 
 </div>
 
@@ -68,15 +97,23 @@
     function drawItem(dataToLabel) {
         console.log("loading");
         const sourceCodeParagraph = document.getElementById("codeContainer");
+        const sourceQuery = document.getElementById("queryContainer")
+        const sourceHref = document.getElementById("linkContainer")
         fetch(dataToLabel)
             .then(response => {
                 return response.text();
             })
             .then((data) => {
-                sourceCodeParagraph.innerHTML = data.toString();
+                const string_data = data.toString();
+                const parts = string_data.split("+++");
+                sourceQuery.innerHTML = parts[0];
+
+                sourceCodeParagraph.innerHTML = parts[1];
                 sourceCodeParagraph.children[0].style.border = "";
                 sourceCodeParagraph.children[0].style.borderWidth = "";
                 sourceCodeParagraph.children[0].style.marginLeft = "10px";
+
+                sourceHref.children[0].href = parts[2];
             });
     }
 
