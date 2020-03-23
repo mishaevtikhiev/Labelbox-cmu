@@ -33,6 +33,10 @@
         background-color: #999999;
     }
 
+    .input:focus {
+        outline: none;
+    }
+
     .codeContainer {
         /*display: flex;*/
         margin-left: 10px;
@@ -100,24 +104,11 @@
 
     Labelbox.currentAsset().subscribe(asset => {
         if (asset) {
-            drawItem(asset.data);
-            if (asset.label) {
-                addLabel(asset.label);
-            }
+            drawItem(asset.data, asset.label);
         }
     });
 
-    function addLabel(label) {
-        console.log("Add existing label " + label);
-        if (label == "Skip") {
-            return;
-        }
-        const option_id = label;
-        radiobtn = document.getElementById(option_id);
-        radiobtn.checked = true;
-    }
-
-    function drawItem(dataToLabel) {
+    function drawItem(dataToLabel, label) {
         console.log("loading");
         const sourceCodeParagraph = document.getElementById("codeContainer");
         const sourceQuery = document.getElementById("queryContainer")
@@ -137,6 +128,13 @@
                 sourceCodeParagraph.children[0].style.marginLeft = "10px";
 
                 sourceHref.href = parts[2];
+
+                $(".btn").removeClass('active');
+                $(".btn").blur(); 
+                if (label && label != "Skip") {
+                    const sourceRadiobtn = document.getElementById(label)
+                    $(sourceRadiobtn).parent('.btn').addClass('active');
+                }
             });
     }
 
