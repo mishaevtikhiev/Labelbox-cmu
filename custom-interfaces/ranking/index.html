@@ -27,6 +27,8 @@
         justify-content: center;
     }
 
+    .choiceButton:choose {}
+
     .btn-secondary:hover {
         background-color: #999999;
     }
@@ -58,11 +60,19 @@
         <a href="https://google.com" style="clear: left; font-size: 18" id="linkContainer"> Link to GitHub </a>
     </div>
 
-    <div class="btn-group choice" role="group" aria-label="Basic example" >
-        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Irrelevant')">0 - Irrelevant</button>
-        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Weak match')">1 - Weak match</button>
-        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Strong match')">2 - Strong match</button>
-        <button type="button" class="btn btn-secondary choiceButton" onclick="label('Exact match')">3 - Exact match</button>
+    <div class="btn-group" data-toggle="buttons" aria-label="Basic example" id="choiceContainer">
+        <label class="btn btn-secondary choiceButton" onclick="label('Irrelevant')">
+            <input type="radio" name="options" id="Irrelevant"> 0 - Irrelevant
+        </label>
+        <label class="btn btn-secondary choiceButton" onclick="label('Weak match')">
+            <input type="radio" name="options" id="Weak match"> 1 - Weak match
+        </label>
+        <label class="btn btn-secondary choiceButton" onclick="label('Strong match')">
+            <input type="radio" name="options" id="Strong match"> 2 - Strong match
+        </label>
+        <label class="btn btn-secondary choiceButton" onclick="label('Exact match')">
+            <input type="radio" name="options" id="Exact match"> 3 - Exact match
+        </label>
         <button type="button" class="btn btn-primary choiceButton" onclick="skipLabeling()">Skip</button>
     </div>
 
@@ -91,8 +101,21 @@
     Labelbox.currentAsset().subscribe(asset => {
         if (asset) {
             drawItem(asset.data);
+            if (asset.label) {
+                addLabel(asset.label);
+            }
         }
     });
+
+    function addLabel(label) {
+        console.log("Add existing label " + label);
+        if (label == "Skip") {
+            return;
+        }
+        const option_id = label;
+        radiobtn = document.getElementById(option_id);
+        radiobtn.checked = true;
+    }
 
     function drawItem(dataToLabel) {
         console.log("loading");
