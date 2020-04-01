@@ -10,24 +10,43 @@
 \usepackage{xcolor}
 
 \begin{document}
-{\bf \Large Instruction for query-function relevance labeling. } 
+
+{\bf \Large Motivation} \\
+
+As the amount of produced libraries, APIs and tools grow dramatically the developers want to reuse them rather than create their own solutions. The fact that such resources as StackOverflow are so popular only proves it.
+While the most popular questions are covered by these resources, there are still queries that were not answered. It may take from hours to months for a new question to be answered. Also such resources can’t help with questions about proprietary libraries. That’s why it is necessary to build automatic code search. The labeling of query-code relevance could help to build such a search. \\
+
+You will be given the pairs of a natural language query and a function or method. You need to label how relevant would be this function or method as the result from search system for the query. \\
+
+Through the annotations, we want to measure how relevant would these results be to you. 
+
+\begin{itemize}
+	\item You don't have to be absolutely certain about the correctness of the code.
+	\item You might be interested in copy-pasting the code, finding a library to use or just getting some understanding about how something is implemented.
+	\item You might be searching within your project (e.g. to reuse code witin your project), your company or all of GitHub.
+\end{itemize}
+
+{\bf \Large Instruction for query-function relevance labeling. }  \\
+
+If you are {\bf not} provided with the account credentials:
 \begin{itemize}
 	\item Register on \href{https://labelbox.com}{Labelbox}
-	\item Send account e-mail to the @belatriss (telegram). 
+	\item Send account's e-mail to the @belatriss (telegram). 
 	\item Wait until you are added as a labeler to the project.
 	\item You get an e-mail with the invitation to switch the organisation, do it.
 	\item Go to the projects page -- there should apper the project "Query code relevance".
-	\item Start labeling.
+	\item Start labeling. Label $\sim$ 150-200 pairs. The more pairs you label, the better.
 \end{itemize}
+
+If you are provided with the account credentials:
+\begin{itemize}
+	\item Log in \href{https://labelbox.com}{Labelbox}
+	\item Go to the projects page -- there should apper the project "Query code relevance".
+	\item Start labeling. Label $\sim$ 150-200 pairs. The more pairs you label, the better.
+\end{itemize}
+
 
 {\bf \Large Instruction for labeling. } 
-
-Through the annotations, we want to measure how relevant would these results be to you. 
-\begin{itemize}
-	\item You don't have to be absolutely certain about the correctness of the code.
-	\item You might be interested in copy-pasting the code, finding a lrbrary to use or just getting some understanding about how something is implemented.
-	\item You might be searching within your project (e.g. to reuse code witin your project), your company or all of GitHub.
-\end{itemize}
 
 Please annotate the results according to the following scheme:
 \begin{itemize}
