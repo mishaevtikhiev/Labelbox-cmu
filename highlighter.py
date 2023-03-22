@@ -5,6 +5,7 @@ from pygments.lexers import JavascriptLexer
 from pygments.lexers import CppLexer
 from pygments.lexers import JavaLexer
 from pygments.formatters import HtmlFormatter
+import imgkit
 import json
 lexers_dict = {"js": JavascriptLexer(), "cpp": CppLexer(), "java": JavaLexer()}
 
@@ -21,6 +22,6 @@ for filename in os.listdir(dataset):
             code = task[snippet_number]
             snippet_number_to_int = int(snippet_number)
             text = highlight(code, lexer, HtmlFormatter(full=True, style='colorful'))
-            open(f'highlighted_dataset/{lang}/{task_id}_{snippet_number_to_int}.html', 'w').write(text)
+            imgkit.from_string(text, f'highlighted_dataset/{lang}/{task_id}_{snippet_number_to_int}.jpg')
 
 

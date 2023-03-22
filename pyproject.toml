@@ -10,6 +10,8 @@ packages = [{include = "labelbox_cmu"}]
 python = "^3.10"
 labelbox = "^3.39.0"
 jupyter = "^1.0.0"
+html2image = "^2.0.2"
+imgkit = "^1.2.3"
 
 
 [build-system]
